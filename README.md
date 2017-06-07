@@ -35,3 +35,35 @@ kubectl expose deployment $DEPLOYMENT_NAME --type=LoadBalancer --name=$SERVICE_N
 ```
 * You dont need a replication controller as mentioned [here](https://www.mongodb.com/blog/post/running-mongodb-as-a-microservice-with-docker-and-kubernetes), since deployments already take care of that.
 Deployments subsume the role of RCs.
+* This is what it looks like. Instead of ReplicationController -- think a deployment.
+<p align="center">
+<img src="https://webassets.mongodb.com/_com_assets/cms/image00-f5bc4ecaf8.png?raw=true" width="450"/>
+</p>
+* After adding 3 replicas the cluster looks like this:
+<p align="center">
+<img src="https://webassets.mongodb.com/_com_assets/cms/image01-b1896be8f6.png">
+</p>
+
+* Enabling Replica Sets to Talk to each other.
+* Connect to any one of the mongodb instances. Either use the public IP. Use `kubectl get svc` to get the services and the public IP.
+However, if the cluster is not externally visible, log into the pods ` kubectl exec -it $POD_ID bash`
+* run the inititate command:
+```
+rs.initiate()
+```
+* We need to edit the config of the replica set. Run `conf=rs.conf()`. 
+This member should be known by the external IP address and the port. Add the primary as such:
+```
+conf.members[0].host="$EXTERNAL_IP_FIRST_MONGO_NODE:PORT"
+```
+* Override the configuration data using `rs.reconfig(conf)`
+* Add other (two?) members (secondaries) of the replica set using external IP addresses:
+```
+rs.add($EXTERNAL_IP_SECOND_MONGO_NODE:PORT)
+rs.add($EXTERNAL_IP_THIRD_MONGO_NODE:PORT)
+```
+* Check `rs.status`
+
+##### Credits
+* Image / Some Content Credit: [MongoDB Blog](https://www.mongodb.com/blog/post/running-mongodb-as-a-microservice-with-docker-and-kubernetes)
+* [Video](https://www.mongodb.com/presentations/webinar-enabling-microservices-with-containers-orchestration-and-mongodb)
