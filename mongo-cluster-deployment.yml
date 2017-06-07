@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: mongo-cluster-deployment
+spec:
+  replicas: 1 # this should always be 1
+  template:
+    metadata:
+      labels:
+        app: mongo-cluster
+    spec:
+      containers:
+      - name: mongo-container
+        image: mongo
+        args: ["--dbpath", "/data/mongodb"] # put your own path if it is different from a regular path
+        ports:
+        - name: mongo
+          containerPort: 27017
+          hostPort: 27017
+        volumeMounts:
+        - name: mongo-cluster-2a
+          mountPath: /data
+      volumes:
+      - name: mongo-cluster-2a
+        awsElasticBlockStore:
+          volumeID: EBS_VOLUME_ID # volume id from aws console.
+          fsType: ext4
