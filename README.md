@@ -37,11 +37,11 @@ kubectl expose deployment $DEPLOYMENT_NAME --type=LoadBalancer --name=$SERVICE_N
 Deployments subsume the role of RCs.
 * This is what it looks like. Instead of ReplicationController -- think a deployment.
 <p align="center">
-<img src="https://webassets.mongodb.com/_com_assets/cms/image00-f5bc4ecaf8.png?raw=true" width="450"/>
+<img src="assets/image00-f5bc4ecaf8.png?raw=true" width="450"/>
 </p>
 * After adding 3 replicas the cluster looks like this:
 <p align="center">
-<img src="https://webassets.mongodb.com/_com_assets/cms/image01-b1896be8f6.png">
+<img src="assets/mongo-cluster.png?raw=true" width="450"/>
 </p>
 
 * Enabling Replica Sets to Talk to each other.
